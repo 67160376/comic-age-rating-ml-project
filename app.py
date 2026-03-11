@@ -114,7 +114,7 @@ features = [
 
 importance = [0.18,0.22,0.10,0.15,0.12,0.08,0.07,0.08]
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(5,3))
 
 ax.barh(features, importance)
 ax.set_xlabel("Importance Score")

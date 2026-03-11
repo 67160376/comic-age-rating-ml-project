@@ -75,15 +75,34 @@ if st.button("🔍 Predict Age Rating"):
     })
 
     prediction = model.predict(input_data)[0]
-
     rating_text = rating_map.get(prediction, prediction)
 
     st.success(f"🎯 Predicted Age Rating: {rating_text}")
 
+    # Probability
     if hasattr(model,"predict_proba"):
-        proba = model.predict_proba(input_data).max()
-        st.write(f"🤖 Model Confidence: {round(proba*100,2)}%")
-        st.progress(float(proba))
+
+        proba = model.predict_proba(input_data)[0]
+
+        kids_prob = round(proba[0]*100,2)
+        teen_prob = round(proba[1]*100,2)
+        adult_prob = round(proba[2]*100,2)
+
+        st.write("### 🤖 Prediction Probability")
+
+        st.write(f"Kids : {kids_prob}%")
+        st.write(f"Teen : {teen_prob}%")
+        st.write(f"Adult : {adult_prob}%")
+
+        st.progress(float(max(proba)))
+
+        # Probability Chart
+        prob_df = pd.DataFrame({
+            "Rating":["Kids","Teen","Adult"],
+            "Probability":[kids_prob,teen_prob,adult_prob]
+        })
+
+        st.bar_chart(prob_df.set_index("Rating"))
 
 st.divider()
 

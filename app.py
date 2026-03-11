@@ -75,36 +75,40 @@ if st.button("🔍 Predict Age Rating"):
     })
 
     prediction = model.predict(input_data)[0]
+
     rating_text = rating_map.get(prediction, prediction)
 
     st.success(f"🎯 Predicted Age Rating: {rating_text}")
 
-    # Probability
+    # Probability (only if model supports it)
 if hasattr(model, "predict_proba"):
 
-    proba = model.predict_proba(input_data)[0]
-    classes = model.classes_
+        proba = model.predict_proba(input_data)[0]
 
-    prob_dict = dict(zip(classes, proba))
+        classes = model.classes_
+        prob_dict = dict(zip(classes, proba))
 
-    kids_prob = round(prob_dict.get(1,0)*100,2)
-    teen_prob = round(prob_dict.get(2,0)*100,2)
-    adult_prob = round(prob_dict.get(3,0)*100,2)
+        kids_prob = round(prob_dict.get(1,0)*100,2)
+        teen_prob = round(prob_dict.get(2,0)*100,2)
+        adult_prob = round(prob_dict.get(3,0)*100,2)
 
-    st.write("### 🤖 Prediction Probability")
+        st.write("### 🤖 Prediction Probability")
 
-    st.write(f"Kids : {kids_prob}%")
-    st.write(f"Teen : {teen_prob}%")
-    st.write(f"Adult : {adult_prob}%")
+        st.write(f"Kids : {kids_prob}%")
+        st.write(f"Teen : {teen_prob}%")
+        st.write(f"Adult : {adult_prob}%")
 
-    st.progress(float(max(proba)))
+        st.progress(float(max(proba)))
 
-    prob_df = pd.DataFrame({
-        "Rating":["Kids","Teen","Adult"],
-        "Probability":[kids_prob,teen_prob,adult_prob]
-    })
+        prob_df = pd.DataFrame({
+            "Rating":["Kids","Teen","Adult"],
+            "Probability":[kids_prob,teen_prob,adult_prob]
+        })
 
-    st.bar_chart(prob_df.set_index("Rating"))
+        st.bar_chart(prob_df.set_index("Rating"))
+
+    else:
+        st.info("Model does not support probability prediction.")
 
 st.divider()
 

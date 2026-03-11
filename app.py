@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import joblib
 
+st.set_page_config(page_title="Comic Age Rating Predictor", layout="centered")
+
 model = joblib.load("model.pkl")
 
 st.title("Comic Age Rating Predictor")

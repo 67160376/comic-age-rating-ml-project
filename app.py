@@ -119,4 +119,3 @@ st.pyplot(fig)
 st.divider()
 
 st.caption("Created by Sirapop | Machine Learning Project")
-```

@@ -80,7 +80,7 @@ if st.button("🔍 Predict Age Rating"):
     st.success(f"🎯 Predicted Age Rating: {rating_text}")
 
     # Probability
-    if hasattr(model, "predict_proba"):
+if hasattr(model, "predict_proba"):
 
     proba = model.predict_proba(input_data)[0]
     classes = model.classes_

@@ -16,6 +16,34 @@ format_type = st.selectbox("Format",["Print","Digital"])
 language = st.selectbox("Language",["English","Japanese"])
 status = st.selectbox("Status",["Ongoing","Completed"])
 
+genre_map = {
+    "Action":0,
+    "Comedy":1,
+    "Drama":2,
+    "Fantasy":3
+}
+
+country_map = {
+    "USA":0,
+    "Japan":1,
+    "Korea":2
+}
+
+format_map = {
+    "Print":0,
+    "Digital":1
+}
+
+language_map = {
+    "English":0,
+    "Japanese":1
+}
+
+status_map = {
+    "Ongoing":0,
+    "Completed":1
+}
+
 if st.button("Predict"):
 
   input_data = pd.DataFrame({
@@ -31,5 +59,4 @@ if st.button("Predict"):
 
     prediction = model.predict(input_data)[0]
 
-    st.success(f"Predicted Age Rating: {prediction}")
-
+    

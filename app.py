@@ -3,14 +3,16 @@ import pandas as pd
 import joblib
 import matplotlib.pyplot as plt
 
+# Page setup
 st.set_page_config(
     page_title="Comic Age Rating Predictor",
     page_icon="📚",
     layout="wide"
 )
 
-# Load model
+# Load model and encoder
 model = joblib.load("model.pkl")
+encoder = joblib.load("encoder.pkl")
 
 # Title
 st.title("📚 Comic Age Rating Predictor")
@@ -33,25 +35,18 @@ st.subheader("📊 Comic Information")
 left, right = st.columns(2)
 
 with left:
-    year = st.number_input("Release Year",1900,2025,2000)
-    pages = st.number_input("Page Count",1,500,30)
-    volume = st.number_input("Volume Count",1,100,1)
-    genre = st.selectbox("Genre",["Action","Comedy","Drama","Fantasy"])
+    year = st.number_input("Release Year", 1900, 2025, 2000)
+    pages = st.number_input("Page Count", 1, 500, 30)
+    volume = st.number_input("Volume Count", 1, 100, 1)
+    genre = st.selectbox("Genre", ["Action", "Comedy", "Drama", "Fantasy"])
 
 with right:
-    country = st.selectbox("Country of Origin",["USA","Japan","Korea"])
-    format_type = st.selectbox("Format",["Print","Digital"])
-    language = st.selectbox("Language",["English","Japanese"])
-    status = st.selectbox("Status",["Ongoing","Completed"])
+    country = st.selectbox("Country of Origin", ["USA", "Japan", "Korea"])
+    format_type = st.selectbox("Format", ["Print", "Digital"])
+    language = st.selectbox("Language", ["English", "Japanese"])
+    status = st.selectbox("Status", ["Ongoing", "Completed"])
 
 st.divider()
-
-# Encoding
-genre_map = {"Action":0,"Comedy":1,"Drama":2,"Fantasy":3}
-country_map = {"USA":0,"Japan":1,"Korea":2}
-format_map = {"Print":0,"Digital":1}
-language_map = {"English":0,"Japanese":1}
-status_map = {"Ongoing":0,"Completed":1}
 
 # Age Rating Mapping
 rating_map = {
@@ -63,15 +58,23 @@ rating_map = {
 # Prediction
 if st.button("🔍 Predict Age Rating"):
 
+    # Encode inputs using encoder
+    genre_encoded = encoder.transform([genre])[0]
+    country_encoded = encoder.transform([country])[0]
+    format_encoded = encoder.transform([format_type])[0]
+    language_encoded = encoder.transform([language])[0]
+    status_encoded = encoder.transform([status])[0]
+
+    # Create dataframe
     input_data = pd.DataFrame({
         'Release Year':[year],
         'Page Count':[pages],
         'Volume Count':[volume],
-        'Genre':[genre_map[genre]],
-        'Country of Origin':[country_map[country]],
-        'Format':[format_map[format_type]],
-        'Language':[language_map[language]],
-        'Status':[status_map[status]]
+        'Genre':[genre_encoded],
+        'Country of Origin':[country_encoded],
+        'Format':[format_encoded],
+        'Language':[language_encoded],
+        'Status':[status_encoded]
     })
 
     prediction = model.predict(input_data)[0]
@@ -81,7 +84,7 @@ if st.button("🔍 Predict Age Rating"):
     st.success(f"🎯 Predicted Age Rating: {rating_text}")
 
     # Confidence
-    if hasattr(model,"predict_proba"):
+    if hasattr(model, "predict_proba"):
         proba = model.predict_proba(input_data).max()
         st.write(f"🤖 Model Confidence: {round(proba*100,2)}%")
         st.progress(float(proba))
@@ -104,7 +107,7 @@ features = [
 
 importance = [0.18,0.22,0.10,0.15,0.12,0.08,0.07,0.08]
 
-fig, ax = plt.subplots(figsize=(6,4))
+fig, ax = plt.subplots(figsize=(5,3))
 
 ax.barh(features, importance)
 
@@ -115,4 +118,5 @@ st.pyplot(fig)
 
 st.divider()
 
-st.caption("Developed using Python Machine Learning & Streamlit")
+st.caption("Created by Sirapop | Machine Learning Project")
+```

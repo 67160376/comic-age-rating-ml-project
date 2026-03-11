@@ -9,48 +9,28 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------- Custom CSS ----------
-st.markdown("""
-<style>
-.main-title{
-    font-size:40px;
-    font-weight:700;
-}
-.card{
-    background-color:#111827;
-    padding:20px;
-    border-radius:12px;
-    border:1px solid #1f2937;
-}
-.metric{
-    font-size:22px;
-    font-weight:600;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# ---------- Load Model ----------
+# Load model
 model = joblib.load("model.pkl")
 
-# ---------- Header ----------
-st.markdown('<div class="main-title">📚 Comic Age Rating Predictor</div>', unsafe_allow_html=True)
+# Title
+st.title("📚 Comic Age Rating Predictor")
 st.caption("AI model that predicts comic age rating from comic features")
 
 st.divider()
 
-# ---------- Dataset Summary ----------
-colA,colB,colC = st.columns(3)
+# Dataset Summary
+col1, col2, col3 = st.columns(3)
 
-colA.metric("Dataset Size","10,000")
-colB.metric("Features Used","8")
-colC.metric("Model Type","ML Classifier")
+col1.metric("Dataset Size", "10,000")
+col2.metric("Features Used", "8")
+col3.metric("Model Type", "ML Classifier")
 
 st.divider()
 
-# ---------- Input Section ----------
+# Comic Information
 st.subheader("📊 Comic Information")
 
-left,right = st.columns(2)
+left, right = st.columns(2)
 
 with left:
     year = st.number_input("Release Year",1900,2025,2000)
@@ -66,14 +46,21 @@ with right:
 
 st.divider()
 
-# ---------- Encoding ----------
+# Encoding
 genre_map = {"Action":0,"Comedy":1,"Drama":2,"Fantasy":3}
 country_map = {"USA":0,"Japan":1,"Korea":2}
 format_map = {"Print":0,"Digital":1}
 language_map = {"English":0,"Japanese":1}
 status_map = {"Ongoing":0,"Completed":1}
 
-# ---------- Prediction ----------
+# Age Rating Mapping
+rating_map = {
+    1: "Kids",
+    2: "Teen",
+    3: "Adult"
+}
+
+# Prediction
 if st.button("🔍 Predict Age Rating"):
 
     input_data = pd.DataFrame({
@@ -89,8 +76,11 @@ if st.button("🔍 Predict Age Rating"):
 
     prediction = model.predict(input_data)[0]
 
-    st.success(f"🎯 Predicted Age Rating: {prediction}")
+    rating_text = rating_map.get(prediction, prediction)
 
+    st.success(f"🎯 Predicted Age Rating: {rating_text}")
+
+    # Confidence
     if hasattr(model,"predict_proba"):
         proba = model.predict_proba(input_data).max()
         st.write(f"🤖 Model Confidence: {round(proba*100,2)}%")
@@ -98,7 +88,7 @@ if st.button("🔍 Predict Age Rating"):
 
 st.divider()
 
-# ---------- Feature Importance ----------
+# Feature Importance
 st.subheader("📈 Feature Importance")
 
 features = [
@@ -114,9 +104,10 @@ features = [
 
 importance = [0.18,0.22,0.10,0.15,0.12,0.08,0.07,0.08]
 
-fig, ax = plt.subplots(figsize=(5,3))
+fig, ax = plt.subplots(figsize=(6,4))
 
 ax.barh(features, importance)
+
 ax.set_xlabel("Importance Score")
 ax.set_title("Feature Contribution")
 
@@ -124,4 +115,4 @@ st.pyplot(fig)
 
 st.divider()
 
-st.caption("Developed using Python Machine Learning and Streamlit")
+st.caption("Developed using Python Machine Learning & Streamlit")

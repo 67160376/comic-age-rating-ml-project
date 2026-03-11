@@ -80,8 +80,8 @@ if st.button("🔍 Predict Age Rating"):
 
     st.success(f"🎯 Predicted Age Rating: {rating_text}")
 
-    # Probability (only if model supports it)
-if hasattr(model, "predict_proba"):
+    # Probability (safe)
+    try:
 
         proba = model.predict_proba(input_data)[0]
 
@@ -92,7 +92,7 @@ if hasattr(model, "predict_proba"):
         teen_prob = round(prob_dict.get(2,0)*100,2)
         adult_prob = round(prob_dict.get(3,0)*100,2)
 
-        st.write("### 🤖 Prediction Probability")
+        st.subheader("🤖 Prediction Probability")
 
         st.write(f"Kids : {kids_prob}%")
         st.write(f"Teen : {teen_prob}%")
@@ -107,8 +107,8 @@ if hasattr(model, "predict_proba"):
 
         st.bar_chart(prob_df.set_index("Rating"))
 
-else:
-        st.info("Model does not support probability prediction.")
+    except:
+        st.info("This model does not support probability prediction.")
 
 st.divider()
 

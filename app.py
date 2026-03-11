@@ -46,17 +46,17 @@ status_map = {
 
 if st.button("Predict"):
 
-  input_data = pd.DataFrame({
-    'Release Year':[year],
-    'Page Count':[pages],
-    'Volume Count':[volume],
-    'Genre':[genre_map[genre]],
-    'Country of Origin':[country_map[country]],
-    'Format':[format_map[format_type]],
-    'Language':[language_map[language]],
-    'Status':[status_map[status]]
-})
+    input_data = pd.DataFrame({
+        'Release Year':[year],
+        'Page Count':[pages],
+        'Volume Count':[volume],
+        'Genre':[genre_map[genre]],
+        'Country of Origin':[country_map[country]],
+        'Format':[format_map[format_type]],
+        'Language':[language_map[language]],
+        'Status':[status_map[status]]
+    })
 
     prediction = model.predict(input_data)[0]
 
-    
+    st.success(f"Predicted Age Rating: {prediction}")

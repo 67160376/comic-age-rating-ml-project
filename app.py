@@ -33,30 +33,3 @@ if st.button("Predict"):
 
     st.success(f"Predicted Age Rating: {prediction}")
 
-genre_map = {
-    "Action":0,
-    "Comedy":1,
-    "Drama":2,
-    "Fantasy":3
-}
-
-country_map = {
-    "USA":0,
-    "Japan":1,
-    "Korea":2
-}
-
-format_map = {
-    "Print":0,
-    "Digital":1
-}
-
-language_map = {
-    "English":0,
-    "Japanese":1
-}
-
-status_map = {
-    "Ongoing":0,
-    "Completed":1
-}

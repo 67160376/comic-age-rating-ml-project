@@ -107,7 +107,7 @@ if hasattr(model, "predict_proba"):
 
         st.bar_chart(prob_df.set_index("Rating"))
 
-    else:
+else:
         st.info("Model does not support probability prediction.")
 
 st.divider()

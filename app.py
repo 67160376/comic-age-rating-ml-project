@@ -60,3 +60,10 @@ if st.button("Predict"):
     prediction = model.predict(input_data)[0]
 
     st.success(f"Predicted Age Rating: {prediction}")
+
+    # confidence
+    proba = model.predict_proba(input_data).max()
+
+    st.write(f"Model Confidence: {round(proba*100,2)}%")
+
+    st.progress(float(proba))
